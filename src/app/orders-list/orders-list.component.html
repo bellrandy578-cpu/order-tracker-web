@@ -21,9 +21,12 @@
             {{ order.product }} – Status: <strong>{{ order.status }}</strong>
           </p>
 
-          <!-- Line 3 -->
+          <!-- Line 3 – ORDER DATE -->
           <p class="line">
-            Ordered: <strong>{{ order.orderdate| date:'mediumDate' }}</strong>
+            Ordered: 
+            <strong>
+              {{ order.orderDate| date:'mediumDate' }}
+            </strong>
             – Amount: ${{ order.amount }}
           </p>
         </a>

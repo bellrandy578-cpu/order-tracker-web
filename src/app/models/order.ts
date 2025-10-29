@@ -11,7 +11,7 @@ export interface Order {
   id: number;
   product: string;
   status: 'pending' | 'shipped' | 'delivered' | 'cancelled';
-  orderdate: string;              // order creation date
+  orderDate: string;              // order creation date
   amount: number;
   /** Embedded history – same orderId as this.id */
   history: OrderStatusHistory[];
