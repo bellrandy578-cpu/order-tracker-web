@@ -1,0 +1,37 @@
+<!-- src/app/orders-list/orders-list.component.html -->
+<h2>All Orders</h2>
+
+<!-- ERROR -->
+<div *ngIf="error" class="error">
+  <p>Error: {{ error.message }}</p>
+  <button (click)="retry()">Retry</button>
+</div>
+
+<!-- CONTENT -->
+<div *ngIf="!error">
+  <div *ngIf="orders$ | async as orders; else loading">
+    <ul class="order-list" *ngIf="orders.length; else empty">
+      <li *ngFor="let order of orders" class="order-item">
+        <a routerLink="/order/{{ order.id }}" class="order-link">
+          <!-- Line 1 -->
+          <p class="line"><strong>Order #{{ order.id }}</strong></p>
+
+          <!-- Line 2 -->
+          <p class="line">
+            {{ order.product }} – Status: <strong>{{ order.status }}</strong>
+          </p>
+
+          <!-- Line 3 -->
+          <p class="line">
+            Ordered: <strong>{{ order.orderdate| date:'mediumDate' }}</strong>
+            – Amount: ${{ order.amount }}
+          </p>
+        </a>
+      </li>
+    </ul>
+
+    <ng-template #empty><p><em>No orders found.</em></p></ng-template>
+  </div>
+
+  <ng-template #loading><p>Loading orders...</p></ng-template>
+</div>

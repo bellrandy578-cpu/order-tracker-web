@@ -1,0 +1,49 @@
+<!-- src/app/order-detail/order-detail.component.html -->
+<div *ngIf="detail$ | async as state">
+  <p><a routerLink="/">Back to Orders</a></p>
+
+  <!-- LOADING -->
+  <div *ngIf="state.loading"><p>Loading order and history…</p></div>
+
+  <!-- ORDER ERROR -->
+  <div *ngIf="state.orderError && !state.order" class="error">
+    <p>Error loading order: {{ state.orderError.message }}</p>
+    <button (click)="retry()">Retry</button>
+  </div>
+
+  <!-- ORDER SUCCESS -->
+  <div *ngIf="state.order" class="order-info">
+    <h2>Order #{{ state.order.id }}</h2>
+
+    <p class="line">
+      {{ state.order.product }} – Status: <strong>{{ state.order.status }}</strong>
+    </p>
+
+    <p class="line">
+      Ordered: <strong>{{ state.order.orderdate| date:'mediumDate' }}</strong>
+      – Amount: ${{ state.order.amount }}
+    </p>
+  </div>
+
+  <hr *ngIf="state.order" />
+
+  <!-- HISTORY ERROR -->
+  <div *ngIf="state.historyError" class="error">
+    <p>Error loading history: {{ state.historyError.message }}</p>
+    <button (click)="retry()">Retry History</button>
+  </div>
+
+  <!-- HISTORY LIST -->
+  <div *ngIf="state.history && state.history.length">
+    <h3>Status History</h3>
+    <ul>
+      <li *ngFor="let entry of state.history">
+        <strong>{{ entry.status | uppercase }}</strong>
+        on <strong>{{ entry.changedAt | date:'medium' }}</strong>
+        <span *ngIf="entry.changedBy"> by <em>{{ entry.changedBy }}</em></span>
+      </li>
+    </ul>
+  </div>
+
+  <p *ngIf="state.history && !state.history.length"><em>No history yet.</em></p>
+</div>

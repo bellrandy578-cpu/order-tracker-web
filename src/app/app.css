@@ -1,0 +1,5 @@
+/* src/styles.css */
+.error { color: red; background: #ffe6e6; padding: 10px; border-radius: 4px; }
+button { margin-left: 8px; }
+ul { padding-left: 20px; }
+li { margin: 8px 0; }

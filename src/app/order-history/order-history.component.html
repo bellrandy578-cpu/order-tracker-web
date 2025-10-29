@@ -1,0 +1,13 @@
+<!-- src/app/order-history/order-history.component.html -->
+<h2>Status History – Order #{{ (history$ | async)?.[0]?.id }}</h2>
+
+<div *ngIf="history$ | async as history; else loading">
+  <ul>
+    <li *ngFor="let entry of history">
+      {{ entry.status | uppercase }} – {{ entry.changedAt | date:'medium' }}
+      <span *ngIf="entry.changedBy">by {{ entry.changedBy }}</span>
+    </li>
+  </ul>
+</div>
+
+<ng-template #loading><p>Loading history…</p></ng-template>
