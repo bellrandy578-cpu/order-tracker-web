@@ -3,7 +3,7 @@
 <div *ngIf="order$ | async as order; else loading">
   <p>
     {{ order.product }} – <strong>{{ order.status }}</strong>
-    ({{ order.date | date:'short' }}) – ${{ order.amount }}
+    ({{ order.orderdate| date:'short' }}) – ${{ order.amount }}
   </p>
   <button (click)="markShipped()">Mark Shipped</button>
 </div>
