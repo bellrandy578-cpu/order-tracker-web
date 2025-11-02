@@ -26,14 +26,49 @@ export class OrderDetailComponent {
   private orderService = inject(OrderService);
   private refresh$ = new BehaviorSubject<void>(undefined);
 
+  // Per spec the direction was to use TWO calls to server to get order and its history.
+  // detail$ = this.refresh$.pipe(
+  //   switchMap(() => this.route.paramMap),
+  //   switchMap(params => {
+  //     const id = +params.get('id')!;
+  //     return this.orderService.getOrderWithHistory(id).pipe(
+  //       map(({ order, history }) => ({
+  //         order,
+  //         history,
+  //         loading: false,
+  //       } as DetailState)),
+  //       catchError(err => {
+  //         if (err.isOrderError) {
+  //           return of({
+  //             orderError: err,
+  //             loading: false,
+  //           } as DetailState);
+  //         }
+  //         if (err.isHistoryError) {
+  //           return of({
+  //             order: err.order,
+  //             historyError: err,
+  //             loading: false,
+  //           } as DetailState);
+  //         }
+  //         return of({
+  //           orderError: err,
+  //           loading: false,
+  //         } as DetailState);
+  //       }),
+  //       startWith({ loading: true } as DetailState)
+  //     );
+  //   })
+  // );
+
   detail$ = this.refresh$.pipe(
     switchMap(() => this.route.paramMap),
     switchMap(params => {
       const id = +params.get('id')!;
       return this.orderService.getOrderWithHistory(id).pipe(
-        map(({ order, history }) => ({
+        map((order: Order) => ({
           order,
-          history,
+          history: order.history,
           loading: false,
         } as DetailState)),
         catchError(err => {

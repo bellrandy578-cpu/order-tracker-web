@@ -30,6 +30,13 @@ export class OrderService {
     );
   }
 
+  /** GET /orders/{id}/orderhistory USE ONE CALL */
+  getOrderWithHistory(orderId: number): Observable<Order> {
+    return this.http.get<Order>(`${API_BASE}/orders/${orderId}/orderwithhistory`).pipe(
+      catchError(this.handleError<Order>(`getOrderWithHistory(${orderId})`))
+    );
+  }
+
   /** GET /orders/{id}/history */
   getOrderHistory(orderId: number): Observable<OrderStatusHistory[]> {
     return this.http.get<OrderStatusHistory[]>(`${API_BASE}/orders/${orderId}/history`).pipe(
@@ -37,8 +44,8 @@ export class OrderService {
     );
   }
 
-  /** Sequential: order → history */
-  getOrderWithHistory(orderId: number): Observable<{ order: Order; history: OrderStatusHistory[] }> {
+  /** Sequential: order → history NOT EFFICIENT */
+  getOrderWithHistorySequential(orderId: number): Observable<{ order: Order; history: OrderStatusHistory[] }> {
     return this.getOrder(orderId).pipe(
       catchError(err => {
         throw { ...err, isOrderError: true };
