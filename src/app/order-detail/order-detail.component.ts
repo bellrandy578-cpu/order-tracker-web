@@ -65,7 +65,7 @@ export class OrderDetailComponent {
     switchMap(() => this.route.paramMap),
     switchMap(params => {
       const id = +params.get('id')!;
-      return this.orderService.getOrderWithHistory(id).pipe(
+      return this.orderService.getOrder(id).pipe(
         map((order: Order) => ({
           order,
           history: order.history,
