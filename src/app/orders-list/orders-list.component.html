@@ -8,6 +8,23 @@
 </div>
 
 <!-- CONTENT -->
+<div class="order-navigator">
+  <label for="orderIdInput">Go to Order ID:</label>
+  <input
+    id="orderIdInput"
+    type="number"
+    min="1"
+    [(ngModel)]="inputOrderId"
+    (keyup.enter)="goToOrder()"
+    placeholder="e.g. 5"
+    class="order-id-input"
+  />
+  <button (click)="goToOrder()" [disabled]="!isValidId()" class="go-button">
+    Go
+  </button>
+  <span *ngIf="inputError" class="error-text">{{ inputError }}</span>
+</div>
+        
 <div *ngIf="!error">
   <div *ngIf="orders$ | async as orders; else loading">
     <ul class="order-list" *ngIf="orders.length; else empty">

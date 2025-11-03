@@ -1,5 +1,5 @@
 // src/app/order-detail/order-detail.component.ts
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderService, ApiError } from '../order.service';
@@ -25,6 +25,8 @@ export class OrderDetailComponent {
   private route = inject(ActivatedRoute);
   private orderService = inject(OrderService);
   private refresh$ = new BehaviorSubject<void>(undefined);
+
+  @Input() orderId: number | undefined;
 
   // Per spec the direction was to use TWO calls to server to get order and its history.
   // detail$ = this.refresh$.pipe(
