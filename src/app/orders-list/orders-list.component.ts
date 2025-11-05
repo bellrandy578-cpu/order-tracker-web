@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService, ApiError } from '../order.service';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, startWith, switchMap } from 'rxjs/operators';
 import { Order } from '../models/order';
 
 @Component({
@@ -22,12 +22,26 @@ export class OrdersListComponent {
   inputError: string | null = null;
 
 
-  orders$: Observable<Order[]> = this.orderService.getAllOrders().pipe(
+  // RETRY TRIGGER
+  private refresh$ = new BehaviorSubject<void>(undefined);
+
+  // With BehaviorSubject we now have a way to trigger refreshes and start with state
+  orders$ : Observable<Order[]> = this.refresh$.pipe(
+    switchMap(() => this.orderService.getAllOrders()),
     catchError((err: ApiError) => {
       this.error = err;
-      return of([]);
-    })
+      return of([]); // fallback
+    }),
+    startWith([]) // empty array while loading
   );
+
+  // Old code was recreating the observable from the service directly
+  // orders$: Observable<Order[]> = this.orderService.getAllOrders().pipe(
+  //   catchError((err: ApiError) => {
+  //     this.error = err;
+  //     return of([]);
+  //   })
+  // );
 
   error: ApiError | null = null;
 
@@ -49,11 +63,13 @@ export class OrdersListComponent {
 
   retry() {
     this.error = null;
-    this.orders$ = this.orderService.getAllOrders().pipe(
-      catchError((err: ApiError) => {
-        this.error = err;
-        return of([]);
-      })
-    );
+    this.refresh$.next();
+    // Old code  - refresh$.next() replaces this
+    // this.orders$ = this.orderService.getAllOrders().pipe(
+    //   catchError((err: ApiError) => {
+    //     this.error = err;
+    //     return of([]);
+    //   })
+    // );
   }
 }
