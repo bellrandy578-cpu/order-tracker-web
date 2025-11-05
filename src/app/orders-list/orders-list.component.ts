@@ -25,7 +25,8 @@ export class OrdersListComponent {
   // RETRY TRIGGER
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // With BehaviorSubject we now have a way to trigger refreshes and start with state
+  // With BehaviorSubject we now have a better way 
+  // to trigger refreshes and start with state
   orders$ : Observable<Order[]> = this.refresh$.pipe(
     switchMap(() => this.orderService.getAllOrders()),
     catchError((err: ApiError) => {
@@ -35,7 +36,7 @@ export class OrdersListComponent {
     startWith([]) // empty array while loading
   );
 
-  // Old code was recreating the observable from the service directly
+  // Old code did not use a BehaviorSubject as arefreash trigger
   // orders$: Observable<Order[]> = this.orderService.getAllOrders().pipe(
   //   catchError((err: ApiError) => {
   //     this.error = err;
@@ -64,7 +65,8 @@ export class OrdersListComponent {
   retry() {
     this.error = null;
     this.refresh$.next();
-    // Old code  - refresh$.next() replaces this
+    // Old code was recreating the observable from the service directly
+    //  - refresh$.next() replaces this
     // this.orders$ = this.orderService.getAllOrders().pipe(
     //   catchError((err: ApiError) => {
     //     this.error = err;
